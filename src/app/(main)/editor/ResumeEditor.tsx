@@ -3,15 +3,13 @@
 import { steps } from "./steps";
 import { useSearchParams } from "next/navigation";
 import Breadcrumbs from "./Breadcrumbs";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Footer from "./Footer";
 import { ResumeValues } from "@/lib/validation";
 
-export default function ResumeEditor() {
+function ResumeEditorContent() {
   const searchParams = useSearchParams();
-
   const [resumeData, setResumeData] = useState<ResumeValues>({});
-
   const currentStep = searchParams.get("step") || steps[0].key;
 
   function setStep(key: string) {
@@ -52,5 +50,13 @@ export default function ResumeEditor() {
       </main>
       <Footer currentStep={currentStep} setCurrentStep={setStep} />
     </div>
+  );
+}
+
+export default function ResumeEditor() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResumeEditorContent />
+    </Suspense>
   );
 }
